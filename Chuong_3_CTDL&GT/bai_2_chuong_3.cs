@@ -1,7 +1,6 @@
 ﻿using System.Globalization;
 using System.Text;
 
-
 namespace bai2_chuong3
 {
     internal class bai_2_chuong_3
