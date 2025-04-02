@@ -1,6 +1,4 @@
-﻿/*Linh | */
-
-using System.Globalization;
+﻿using System.Globalization;
 using System.Text;
 
 namespace bai2_chuong3
@@ -26,7 +24,7 @@ namespace bai2_chuong3
             }
             public string SachInfo()
             {
-                return $"Mã sách: {maSach} \nTựa sách: {tuaSach} \nNăm xuất bản: {namXuatBan} \nGiá: {gia} \nNgày mua: {ngayMua}";
+                return $"Mã sách: {maSach} \nTựa sách: {tuaSach} \nNăm xuất bản: {namXuatBan} \nGiá: {gia} \nNgày mua: {ngayMua:dd/MM/yyyy}";
             }
         }
         public class QUANLY
@@ -143,7 +141,7 @@ namespace bai2_chuong3
                     Console.WriteLine("Tựa sách: " + arr[i].tuaSach);
                     Console.WriteLine("Năm xuất bản: " + arr[i].namXuatBan);
                     Console.WriteLine("Giá: " + arr[i].gia);
-                    Console.WriteLine("Ngày mua: " + arr[i].ngayMua);
+                    Console.WriteLine($"Ngày mua: {arr[i].ngayMua:dd/MM/yyyy}");
                 }
             }
 
@@ -247,6 +245,7 @@ namespace bai2_chuong3
                     }    
                 }
 
+                Console.WriteLine("----------------------");
                 Console.WriteLine("Ngày mua sau khi sửa");
                 Console.WriteLine(arr[viTri].SachInfo());
             }
@@ -299,6 +298,7 @@ namespace bai2_chuong3
 
             }
             else return;
+
         }
     }
 }
