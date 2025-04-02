@@ -1,4 +1,6 @@
-﻿using System.Globalization;
+﻿/*Linh | */
+
+using System.Globalization;
 using System.Text;
 
 namespace bai2_chuong3
