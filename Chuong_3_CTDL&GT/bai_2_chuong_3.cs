@@ -12,19 +12,17 @@ namespace bai2_chuong3
             public string tuaSach;
             public int namXuatBan;
             public double gia;
-            public DateTime ngayMua;
 
-            public THUVIEN(string maSach, string tuaSach, int namXuatBan, double gia, DateTime ngayMua)
+            public THUVIEN(string maSach, string tuaSach, int namXuatBan, double gia)
             {
                 this.maSach = maSach;
                 this.tuaSach = tuaSach;
                 this.namXuatBan = namXuatBan;
                 this.gia = gia;
-                this.ngayMua = ngayMua;
             }
             public string SachInfo()
             {
-                return $"Mã sách: {maSach} \nTựa sách: {tuaSach} \nNăm xuất bản: {namXuatBan} \nGiá: {gia} \nNgày mua: {ngayMua:dd/MM/yyyy}";
+                return $"Mã sách: {maSach} \nTựa sách: {tuaSach} \nNăm xuất bản: {namXuatBan} \nGiá: {gia}";
             }
         }
         public class QUANLY
@@ -103,21 +101,6 @@ namespace bai2_chuong3
                             break;
                         }
                     }
-
-                    //ngày mua
-                    while (true)
-                    {
-                        Console.Write("Ngày mua (dd/mm/yyyy): ");
-                        if (!DateTime.TryParseExact(Console.ReadLine(), "dd/MM/yyyy", null, DateTimeStyles.None, out ngayMua))
-                        {
-                            Console.WriteLine("Không hợp lệ");
-                        }
-                        else
-                        {
-                            arr[i].ngayMua = ngayMua;
-                            break;
-                        }    
-                    }
                 }
             }
 
@@ -141,7 +124,6 @@ namespace bai2_chuong3
                     Console.WriteLine("Tựa sách: " + arr[i].tuaSach);
                     Console.WriteLine("Năm xuất bản: " + arr[i].namXuatBan);
                     Console.WriteLine("Giá: " + arr[i].gia);
-                    Console.WriteLine($"Ngày mua: {arr[i].ngayMua:dd/MM/yyyy}");
                 }
             }
 
@@ -213,41 +195,38 @@ namespace bai2_chuong3
                 QUANLY.XuatSachSapXep(arr);
             }
 
-            //tìm kiếm tuần tử
-            public static int TimKiemTuanTu(THUVIEN[] arr, string maSach)
+            //giá | giảm
+            public static void SapXepGiamDanQuickSort(THUVIEN[] arr, int left, int right)
             {
-                for (int i = 0; i < arr.Length; i++)
-                {
-                    if (arr[i].maSach == maSach) return i;
-                }    
+                if (left >= right) return;
 
-                return -1;
-            }
+                int i = left, j = right;
+                double mid = arr[(left + right) / 2].gia;
 
-            //sửa ngày mua
-            public static void SuaNgayMua(THUVIEN[] arr, int viTri)
-            {
-                if (viTri >= 0 && viTri < arr.Length)
+                while (i <= j)
                 {
-                    int ngayMuaEdit;
-                    while (true)
+                    while (arr[i].gia > mid) i++;
+                    while (arr[j].gia < mid) j--;
+
+                    if (i <= j)
                     {
-                        Console.Write("Nhập ngày mới: ");
-                        if (!int.TryParse(Console.ReadLine(), out ngayMuaEdit) || ngayMuaEdit < 1 || ngayMuaEdit > DateTime.DaysInMonth(arr[viTri].ngayMua.Year, arr[viTri].ngayMua.Month))
-                        {
-                            Console.WriteLine("ngày không hợp lêj");
-                        }    
-                        else
-                        {
-                            arr[viTri].ngayMua = new DateTime(arr[viTri].ngayMua.Year, arr[viTri].ngayMua.Month ,ngayMuaEdit);
-                            break;
-                        }    
-                    }    
+                        //hoán vị arr[j] và arr[i]
+                        THUVIEN temp = arr[j];
+                        arr[j] = arr[i];
+                        arr[i] = temp;
+                        i++; j--;
+                    }
                 }
 
-                Console.WriteLine("----------------------");
-                Console.WriteLine("Ngày mua sau khi sửa");
-                Console.WriteLine(arr[viTri].SachInfo());
+                SapXepGiamDanQuickSort(arr, left, j);
+                SapXepGiamDanQuickSort(arr, i, right);
+            }
+            public static void SapXepGiaGiamDan(THUVIEN[] arr)
+            {
+                SapXepGiamDanQuickSort(arr, 0, arr.Length - 1);
+                Console.WriteLine("--------------------------------");
+                Console.WriteLine("Sách sau khi giảm dần theo giá");
+                QUANLY.XuatSachSapXep(arr);
             }
         }
         static void Main(string[] args)
@@ -282,23 +261,11 @@ namespace bai2_chuong3
             //giảm dần năm xuất
             QUANLY.SapXepGiamDanInsertionSort(thuVien);
 
-            Console.Write("bạn có muốn thử sửa ngày mua? [y or n]: ");
-            string editTimeBuy = Console.ReadLine();
-            if (editTimeBuy == "y")
-            {
-                Console.Write("nhập mã sách cần sửa: ");
-                string maSach = Console.ReadLine();
-                int viTri = QUANLY.TimKiemTuanTu(thuVien, maSach);
+            //Tăng dần theo tựa sách
+            QUANLY.SapXepTangDanBubbleSort(thuVien);
 
-                if (viTri != -1)
-                {
-                    QUANLY.SuaNgayMua(thuVien, viTri);
-                }
-                else Console.WriteLine("Không tìm nhấy sách");
-
-            }
-            else return;
-
+            //giảm dần theo giá
+            QUANLY.SapXepGiaGiamDan(thuVien);
         }
     }
 }
